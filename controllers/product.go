@@ -23,8 +23,17 @@ func InitProductController() *ProductController {
 	return &ProductController{Db: db}
 }
 
-// Routing
-// GET /products
+// @BasePath /
+
+// GetAllProduct godoc
+// @Summary GetAllProduct example
+// @Schemes
+// @Description GetAllProduct
+// @Tags rest-shoppingcart
+// @Accept json
+// @Produce json
+// @Success 200 {json} GetAllProduct
+// @Router /products [get]
 func (controller *ProductController) GetAllProduct(c *fiber.Ctx) error {
 	// Load all Products
 	var products []models.Product
@@ -39,7 +48,19 @@ func (controller *ProductController) GetAllProduct(c *fiber.Ctx) error {
 	})
 }
 
-// POST /products/create
+// @BasePath /
+
+// AddPostedProduct godoc
+// @Summary AddPostedProduct example
+// @Schemes
+// @Description AddPostedProduct
+// @Tags rest-shoppingcart
+// @Param product body models.Product true "product"
+// @Accept json
+// @Produce json
+// @Success 200 {json} AddPostedProduct
+// @Security ApiKeyAuth
+// @Router /products/create [post]
 func (controller *ProductController) AddPostedProduct(c *fiber.Ctx) error {
 	//myform := new(models.Product)
 	var product models.Product

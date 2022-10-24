@@ -39,7 +39,18 @@ func InitAuthController() *AuthController {
 	return &AuthController{Db: db}
 }
 
-// POST /login
+// @BasePath /
+
+// LoginPosted godoc
+// @Summary LoginPosted example
+// @Schemes
+// @Description LoginPosted
+// @Tags rest-shoppingcart
+// @Param user body models.User true "user"
+// @Accept json
+// @Produce json
+// @Success 200 {json} LoginPosted
+// @Router /login [post]
 func (controller *AuthController) LoginPosted(c *fiber.Ctx) error {
 	var user models.User
 	var myform LoginForm
@@ -101,7 +112,18 @@ func (controller *AuthController) LoginPosted(c *fiber.Ctx) error {
 	})
 }
 
-// POST /register
+// @BasePath /
+
+// AddRegisteredUser godoc
+// @Summary AddRegisteredUser example
+// @Schemes
+// @Description AddRegisteredUser
+// @Tags rest-shoppingcart
+// @Param user body models.User true "user"
+// @Accept json
+// @Produce json
+// @Success 200 {json} AddRegisteredUser
+// @Router /register [post]
 func (controller *AuthController) AddRegisteredUser(c *fiber.Ctx) error {
 	var myform RegistrationForm
 	var user models.User
