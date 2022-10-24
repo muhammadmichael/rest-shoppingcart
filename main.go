@@ -78,4 +78,5 @@ func main() {
 	history.Get("/detail/:transaksiid", transaksiController.DetailTransaksi)
 
 	app.Listen(":3000")
+
 }
