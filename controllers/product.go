@@ -39,13 +39,6 @@ func (controller *ProductController) GetAllProduct(c *fiber.Ctx) error {
 	})
 }
 
-// GET /products/create
-func (controller *ProductController) AddProduct(c *fiber.Ctx) error {
-	return c.Render("addproduct", fiber.Map{
-		"Title": "Tambah Produk",
-	})
-}
-
 // POST /products/create
 func (controller *ProductController) AddPostedProduct(c *fiber.Ctx) error {
 	//myform := new(models.Product)

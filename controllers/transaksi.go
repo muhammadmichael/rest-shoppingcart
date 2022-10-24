@@ -6,14 +6,12 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/session"
 	"gorm.io/gorm"
 )
 
 type TransaksiController struct {
 	// Declare variables
-	Db    *gorm.DB
-	store *session.Store
+	Db *gorm.DB
 }
 
 func InitTransaksiController() *TransaksiController {

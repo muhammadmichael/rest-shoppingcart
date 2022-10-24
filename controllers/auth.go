@@ -3,8 +3,10 @@ package controllers
 import (
 	"rapid/rest-shoppingcart/database"
 	"rapid/rest-shoppingcart/models"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -33,23 +35,52 @@ func (controller *AuthController) LoginPosted(c *fiber.Ctx) error {
 	var myform LoginForm
 
 	if err := c.BodyParser(&myform); err != nil {
-		return c.Redirect("/login")
+		// Bad Request, LoginForm is not complete
+		return c.JSON(fiber.Map{
+			"status":  400,
+			"message": "Bad Request, Login Form is not complete",
+		})
 	}
 
 	// Find user
 	errs := models.FindUserByUsername(controller.Db, &user, myform.Username)
 	if errs != nil {
-		return c.Redirect("/login") // Unsuccessful login (cannot find user)
+		return c.JSON(fiber.Map{
+			"message": "Cannot find user",
+		})
 	}
 
 	// Compare password
 	compare := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(myform.Password))
 	if compare == nil { // compare == nil artinya hasil compare di atas true
+		// Create the Claims
+		exp := time.Now().Add(time.Hour * 72) // token expired time: 72 hours
+		claims := jwt.MapClaims{
+			"name":  user.Username,
+			"admin": true,
+			"exp":   exp.Unix(),
+		}
 
-		return c.Redirect("/products")
+		// Create token
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+		// Generate encoded token and send it as response.
+		t, err := token.SignedString([]byte("mysecretpassword"))
+		if err != nil {
+			return c.SendStatus(fiber.StatusInternalServerError)
+		}
+
+		return c.JSON(fiber.Map{
+			"message": "Berhasil Login",
+			"token":   t,
+			"expired": exp.Format("2006-01-02 15:04:05"),
+		})
 	}
 
-	return c.Redirect("/login")
+	return c.JSON(fiber.Map{
+		"status":  401,
+		"message": "Unauthorized",
+	})
 }
 
 // POST /register
