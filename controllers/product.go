@@ -33,8 +33,8 @@ func (controller *ProductController) GetAllProduct(c *fiber.Ctx) error {
 		return c.SendStatus(500) // http 500 internal server error
 	}
 
-	return c.Render("home", fiber.Map{
-		"Title":    "Shopping Cart",
+	return c.JSON(fiber.Map{
+		"Message":  "Berhasil mendapatkan seluruh list products",
 		"Products": products,
 	})
 }
@@ -91,12 +91,15 @@ func (controller *ProductController) DetailProduct(c *fiber.Ctx) error {
 	var product models.Product
 	err := models.ReadProductById(controller.Db, &product, intId)
 	if err != nil {
-		return c.SendStatus(500) // http 500 internal server error
+		return c.JSON(fiber.Map{
+			"Status":  500,
+			"message": "Tidak dapat mencari detail product dengan Id " + params["id"],
+		})
 	}
 
-	return c.Render("productdetail", fiber.Map{
-		"Title":   "Detail Product",
-		"Product": product,
+	return c.JSON(fiber.Map{
+		"message": "Detail Product Dengan Id " + params["id"],
+		"product": product,
 	})
 }
 
