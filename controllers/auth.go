@@ -5,7 +5,6 @@ import (
 	"rapid/rest-shoppingcart/models"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/session"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -17,16 +16,15 @@ type LoginForm struct {
 
 type AuthController struct {
 	// Declare variables
-	Db    *gorm.DB
-	store *session.Store
+	Db *gorm.DB
 }
 
-func InitAuthController(s *session.Store) *AuthController {
+func InitAuthController() *AuthController {
 	db := database.InitDb()
 	// gorm sync
 	db.AutoMigrate(&models.User{})
 
-	return &AuthController{Db: db, store: s}
+	return &AuthController{Db: db}
 }
 
 // GET /login
@@ -38,10 +36,6 @@ func (controller *AuthController) Login(c *fiber.Ctx) error {
 
 // post /login
 func (controller *AuthController) LoginPosted(c *fiber.Ctx) error {
-	sess, err := controller.store.Get(c)
-	if err != nil {
-		panic(err)
-	}
 	var user models.User
 	var myform LoginForm
 
@@ -58,9 +52,6 @@ func (controller *AuthController) LoginPosted(c *fiber.Ctx) error {
 	// Compare password
 	compare := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(myform.Password))
 	if compare == nil { // compare == nil artinya hasil compare di atas true
-		sess.Set("username", user.Username)
-		sess.Set("userId", user.ID)
-		sess.Save()
 
 		return c.Redirect("/products")
 	}
@@ -111,17 +102,4 @@ func (controller *AuthController) AddRegisteredUser(c *fiber.Ctx) error {
 
 	// if succeed
 	return c.Redirect("/login")
-}
-
-// /logout
-func (controller *AuthController) Logout(c *fiber.Ctx) error {
-
-	sess, err := controller.store.Get(c)
-	if err != nil {
-		panic(err)
-	}
-	sess.Destroy()
-	return c.Render("login", fiber.Map{
-		"Title": "Login",
-	})
 }

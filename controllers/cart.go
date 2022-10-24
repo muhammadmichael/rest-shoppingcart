@@ -6,22 +6,20 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/session"
 	"gorm.io/gorm"
 )
 
 type CartController struct {
 	// Declare variables
-	Db    *gorm.DB
-	store *session.Store
+	Db *gorm.DB
 }
 
-func InitCartController(s *session.Store) *CartController {
+func InitCartController() *CartController {
 	db := database.InitDb()
 	// gorm sync
 	db.AutoMigrate(&models.Cart{})
 
-	return &CartController{Db: db, store: s}
+	return &CartController{Db: db}
 }
 
 // GET /addtocart/:cartid/products/:productid
@@ -67,15 +65,8 @@ func (controller *CartController) GetShoppingCart(c *fiber.Ctx) error {
 		return c.SendStatus(500) // http 500 internal server error
 	}
 
-	sess, err := controller.store.Get(c)
-	if err != nil {
-		panic(err)
-	}
-	val := sess.Get("userId")
-
 	return c.Render("shoppingcart", fiber.Map{
 		"Title":    "Detail Product",
 		"Products": cart.Products,
-		"UserId":   val,
 	})
 }

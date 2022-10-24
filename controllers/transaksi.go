@@ -16,12 +16,12 @@ type TransaksiController struct {
 	store *session.Store
 }
 
-func InitTransaksiController(s *session.Store) *TransaksiController {
+func InitTransaksiController() *TransaksiController {
 	db := database.InitDb()
 	// gorm sync
 	db.AutoMigrate(&models.Transaksi{})
 
-	return &TransaksiController{Db: db, store: s}
+	return &TransaksiController{Db: db}
 }
 
 // GET /checkout/:userid
