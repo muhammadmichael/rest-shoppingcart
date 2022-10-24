@@ -39,7 +39,7 @@ func main() {
 	// Product Routes (CRUD Products, Add Product to Shopping Cart)
 	prod.Post("/create", prodController.AddPostedProduct)
 	prod.Post("/ubah/:id", prodController.AddUpdatedProduct)
-	prod.Put("/hapus/:id", prodController.DeleteProduct)
+	prod.Delete("/hapus/:id", prodController.DeleteProduct)
 	prod.Get("/addtocart/:cartid/product/:productid", cartController.InsertToCart)
 
 	// Cart Routes (View Shopping Cart)

@@ -99,7 +99,7 @@ func (controller *ProductController) DetailProduct(c *fiber.Ctx) error {
 	if err != nil {
 		return c.JSON(fiber.Map{
 			"Status":  500,
-			"message": "Tidak dapat mencari detail product dengan Id " + params["id"],
+			"message": "Tidak dapat mencari product dengan Id " + params["id"],
 		})
 	}
 
@@ -154,7 +154,7 @@ func (controller *ProductController) AddUpdatedProduct(c *fiber.Ctx) error {
 	})
 }
 
-// GET /products/hapus/:id
+// DELETE /products/hapus/:id
 func (controller *ProductController) DeleteProduct(c *fiber.Ctx) error {
 	params := c.AllParams() // "{"id": "1"}"
 
@@ -165,10 +165,22 @@ func (controller *ProductController) DeleteProduct(c *fiber.Ctx) error {
 	}
 
 	var product models.Product
+	errFind := models.ReadProductById(controller.Db, &product, intId)
+	if errFind != nil {
+		return c.JSON(fiber.Map{
+			"Status":  500,
+			"message": "Tidak dapat mencari product dengan Id " + params["id"] + ", Gagal Menghapus Product",
+		})
+	}
+
 	err := models.DeleteProductById(controller.Db, &product, intId)
 	if err != nil {
 		return c.SendStatus(500) // http 500 internal server error
 	}
 
-	return c.Redirect("/products")
+	// if succeed
+	return c.JSON(fiber.Map{
+		"status":  200,
+		"message": "Berhasil Menghapus Product dengan Id " + params["id"],
+	})
 }
