@@ -105,7 +105,18 @@ func (controller *ProductController) AddPostedProduct(c *fiber.Ctx) error {
 	})
 }
 
-// GET /products/detail:id
+// @BasePath /
+
+// DetailProduct godoc
+// @Summary DetailProduct example
+// @Schemes
+// @Description DetailProduct
+// @Param        id         path      int     true  "Product Id"       minimum(1)
+// @Tags rest-shoppingcart
+// @Accept json
+// @Produce json
+// @Success 200 {json} DetailProduct
+// @Router /products/detail/{id} [get]
 func (controller *ProductController) DetailProduct(c *fiber.Ctx) error {
 	params := c.AllParams() // "{"id": "1"}"
 

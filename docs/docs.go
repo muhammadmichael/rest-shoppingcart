@@ -121,6 +121,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/products/detail/{id}": {
+            "get": {
+                "description": "DetailProduct",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rest-shoppingcart"
+                ],
+                "summary": "DetailProduct example",
+                "parameters": [
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Product Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "json"
+                        }
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "description": "AddRegisteredUser",

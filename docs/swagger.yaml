@@ -168,6 +168,28 @@ paths:
       summary: AddPostedProduct example
       tags:
       - rest-shoppingcart
+  /products/detail/{id}:
+    get:
+      consumes:
+      - application/json
+      description: DetailProduct
+      parameters:
+      - description: Product Id
+        in: path
+        minimum: 1
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      summary: DetailProduct example
+      tags:
+      - rest-shoppingcart
   /register:
     post:
       consumes:
