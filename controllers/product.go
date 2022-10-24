@@ -55,8 +55,11 @@ func (controller *ProductController) GetAllProduct(c *fiber.Ctx) error {
 // @Schemes
 // @Description AddPostedProduct
 // @Tags rest-shoppingcart
-// @Param product body models.Product true "product"
-// @Accept json
+// @Param name formData string true "Product Name"
+// @Param quantity formData int true "Quantity"
+// @Param price formData number true "Price"
+// @Param image formData file true "Image"
+// @Accept mpfd
 // @Produce json
 // @Success 200 {json} AddPostedProduct
 // @Security ApiKeyAuth
@@ -143,16 +146,19 @@ func (controller *ProductController) DetailProduct(c *fiber.Ctx) error {
 
 // @BasePath /
 
-// AddPostedProduct godoc
-// @Summary AddPostedProduct example
+// AddUpdatedProduct godoc
+// @Summary AddUpdatedProduct example
 // @Schemes
-// @Description AddPostedProduct
+// @Description AddUpdatedProduct
 // @Tags rest-shoppingcart
 // @Param        id         path      int     true  "Product Id"       minimum(1)
-// @Param product body models.Product true "product"
-// @Accept json
+// @Param name formData string true "Product Name"
+// @Param quantity formData int true "Quantity"
+// @Param price formData number true "Price"
+// @Param image formData file true "Image"
+// @Accept mpfd
 // @Produce json
-// @Success 200 {json} AddPostedProduct
+// @Success 200 {json} AddUpdatedProduct
 // @Security ApiKeyAuth
 // @Router /products/ubah/{id} [put]
 func (controller *ProductController) AddUpdatedProduct(c *fiber.Ctx) error {

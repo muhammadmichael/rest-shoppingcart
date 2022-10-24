@@ -107,6 +107,78 @@ info:
   title: REST Shopping Cart
   version: "1.0"
 paths:
+  /checkout/{userid}:
+    get:
+      consumes:
+      - application/json
+      description: InsertToTransaksi
+      parameters:
+      - description: User Id
+        in: path
+        minimum: 1
+        name: userid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: InsertToTransaksi example
+      tags:
+      - rest-shoppingcart
+  /history/{userid}:
+    get:
+      consumes:
+      - application/json
+      description: GetTransaksi
+      parameters:
+      - description: User Id
+        in: path
+        minimum: 1
+        name: userid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: GetTransaksi example
+      tags:
+      - rest-shoppingcart
+  /history/detail/{transaksiid}:
+    get:
+      consumes:
+      - application/json
+      description: DetailTransaksi
+      parameters:
+      - description: Transaksi Id
+        in: path
+        minimum: 1
+        name: transaksiid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: DetailTransaksi example
+      tags:
+      - rest-shoppingcart
   /login:
     post:
       consumes:
@@ -177,15 +249,29 @@ paths:
   /products/create:
     post:
       consumes:
-      - application/json
+      - multipart/form-data
       description: AddPostedProduct
       parameters:
-      - description: product
-        in: body
-        name: product
+      - description: Product Name
+        in: formData
+        name: name
         required: true
-        schema:
-          $ref: '#/definitions/models.Product'
+        type: string
+      - description: Quantity
+        in: formData
+        name: quantity
+        required: true
+        type: integer
+      - description: Price
+        in: formData
+        name: price
+        required: true
+        type: number
+      - description: Image
+        in: formData
+        name: image
+        required: true
+        type: file
       produces:
       - application/json
       responses:
@@ -247,8 +333,8 @@ paths:
   /products/ubah/{id}:
     put:
       consumes:
-      - application/json
-      description: AddPostedProduct
+      - multipart/form-data
+      description: AddUpdatedProduct
       parameters:
       - description: Product Id
         in: path
@@ -256,12 +342,26 @@ paths:
         name: id
         required: true
         type: integer
-      - description: product
-        in: body
-        name: product
+      - description: Product Name
+        in: formData
+        name: name
         required: true
-        schema:
-          $ref: '#/definitions/models.Product'
+        type: string
+      - description: Quantity
+        in: formData
+        name: quantity
+        required: true
+        type: integer
+      - description: Price
+        in: formData
+        name: price
+        required: true
+        type: number
+      - description: Image
+        in: formData
+        name: image
+        required: true
+        type: file
       produces:
       - application/json
       responses:
@@ -271,7 +371,7 @@ paths:
             type: json
       security:
       - ApiKeyAuth: []
-      summary: AddPostedProduct example
+      summary: AddUpdatedProduct example
       tags:
       - rest-shoppingcart
   /register:
