@@ -251,7 +251,7 @@ const docTemplate = `{
                 ],
                 "description": "AddPostedProduct",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -262,13 +262,32 @@ const docTemplate = `{
                 "summary": "AddPostedProduct example",
                 "parameters": [
                     {
-                        "description": "product",
-                        "name": "product",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Product"
-                        }
+                        "type": "string",
+                        "description": "Product Name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Quantity",
+                        "name": "quantity",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "Price",
+                        "name": "price",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Image",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -359,9 +378,9 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "AddPostedProduct",
+                "description": "AddUpdatedProduct",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -369,7 +388,7 @@ const docTemplate = `{
                 "tags": [
                     "rest-shoppingcart"
                 ],
-                "summary": "AddPostedProduct example",
+                "summary": "AddUpdatedProduct example",
                 "parameters": [
                     {
                         "minimum": 1,
@@ -380,13 +399,32 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "product",
-                        "name": "product",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Product"
-                        }
+                        "type": "string",
+                        "description": "Product Name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Quantity",
+                        "name": "quantity",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "Price",
+                        "name": "price",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Image",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {

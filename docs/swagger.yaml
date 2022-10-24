@@ -249,15 +249,29 @@ paths:
   /products/create:
     post:
       consumes:
-      - application/json
+      - multipart/form-data
       description: AddPostedProduct
       parameters:
-      - description: product
-        in: body
-        name: product
+      - description: Product Name
+        in: formData
+        name: name
         required: true
-        schema:
-          $ref: '#/definitions/models.Product'
+        type: string
+      - description: Quantity
+        in: formData
+        name: quantity
+        required: true
+        type: integer
+      - description: Price
+        in: formData
+        name: price
+        required: true
+        type: number
+      - description: Image
+        in: formData
+        name: image
+        required: true
+        type: file
       produces:
       - application/json
       responses:
@@ -319,8 +333,8 @@ paths:
   /products/ubah/{id}:
     put:
       consumes:
-      - application/json
-      description: AddPostedProduct
+      - multipart/form-data
+      description: AddUpdatedProduct
       parameters:
       - description: Product Id
         in: path
@@ -328,12 +342,26 @@ paths:
         name: id
         required: true
         type: integer
-      - description: product
-        in: body
-        name: product
+      - description: Product Name
+        in: formData
+        name: name
         required: true
-        schema:
-          $ref: '#/definitions/models.Product'
+        type: string
+      - description: Quantity
+        in: formData
+        name: quantity
+        required: true
+        type: integer
+      - description: Price
+        in: formData
+        name: price
+        required: true
+        type: number
+      - description: Image
+        in: formData
+        name: image
+        required: true
+        type: file
       produces:
       - application/json
       responses:
@@ -343,7 +371,7 @@ paths:
             type: json
       security:
       - ApiKeyAuth: []
-      summary: AddPostedProduct example
+      summary: AddUpdatedProduct example
       tags:
       - rest-shoppingcart
   /register:
