@@ -20,6 +20,7 @@ func main() {
 	cartController := controllers.InitCartController()
 	transaksiController := controllers.InitTransaksiController()
 
+	// Product Routes (CRUD Products, Add Product to Shopping Cart)
 	prod := app.Group("/products")
 	prod.Get("/", prodController.GetAllProduct)
 	prod.Get("/create", prodController.AddProduct)
@@ -30,19 +31,21 @@ func main() {
 	prod.Get("/hapus/:id", prodController.DeleteProduct)
 	prod.Get("/addtocart/:cartid/product/:productid", cartController.InsertToCart)
 
+	// Cart Routes (View Shopping Cart)
 	cart := app.Group("/shoppingcart")
 	cart.Get("/:cartid", cartController.GetShoppingCart)
 
+	// Transaksi Routes (Checkout to insert Products in Shopping Cart to History Transaksi)
 	transaksi := app.Group("/checkout")
 	transaksi.Get("/:userid", transaksiController.InsertToTransaksi)
 
+	// History Routes (View History Transaksi and Detail Transaksi (Detail = List of Products))
 	history := app.Group("/history")
 	history.Get("/:userid", transaksiController.GetTransaksi)
 	history.Get("/detail/:transaksiid", transaksiController.DetailTransaksi)
 
-	app.Get("/login", authController.Login)
+	// Auth Routes (Register and Login)
 	app.Post("/login", authController.LoginPosted)
-	app.Get("/register", authController.Register)
 	app.Post("/register", authController.AddRegisteredUser)
 
 	app.Listen(":3000")

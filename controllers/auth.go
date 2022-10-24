@@ -27,14 +27,7 @@ func InitAuthController() *AuthController {
 	return &AuthController{Db: db}
 }
 
-// GET /login
-func (controller *AuthController) Login(c *fiber.Ctx) error {
-	return c.Render("login", fiber.Map{
-		"Title": "Login",
-	})
-}
-
-// post /login
+// POST /login
 func (controller *AuthController) LoginPosted(c *fiber.Ctx) error {
 	var user models.User
 	var myform LoginForm
@@ -59,20 +52,26 @@ func (controller *AuthController) LoginPosted(c *fiber.Ctx) error {
 	return c.Redirect("/login")
 }
 
-// GET /register
-func (controller *AuthController) Register(c *fiber.Ctx) error {
-	return c.Render("register", fiber.Map{
-		"Title": "Register",
-	})
-}
-
 // POST /register
 func (controller *AuthController) AddRegisteredUser(c *fiber.Ctx) error {
 	var user models.User
 	var cart models.Cart
 
 	if err := c.BodyParser(&user); err != nil {
-		return c.SendStatus(400) // Bad Request, RegisterForm is not complete
+		// Bad Request, RegisterForm is not complete
+		return c.JSON(fiber.Map{
+			"status":  400,
+			"message": "Bad Request, Registration Form is not complete",
+		})
+	}
+
+	// Cek apakah username sudah digunakan
+	errUsername := models.FindUserByUsername(controller.Db, &user, user.Username)
+	if errUsername != gorm.ErrRecordNotFound {
+		return c.JSON(fiber.Map{
+			"message": "Username telah digunakan",
+		})
+
 	}
 
 	// Hash password
@@ -85,21 +84,36 @@ func (controller *AuthController) AddRegisteredUser(c *fiber.Ctx) error {
 	// save user
 	err := models.CreateUser(controller.Db, &user)
 	if err != nil {
-		return c.SendStatus(500) // Server error, gagal menyimpan user
+		// Server error, gagal menyimpan user
+		return c.JSON(fiber.Map{
+			"status":  500,
+			"message": "Server error, gagal menyimpan user",
+		})
 	}
 
 	// Find user
 	errs := models.FindUserByUsername(controller.Db, &user, user.Username)
 	if errs != nil {
-		return c.SendStatus(500) // Server error, gagal menyimpan user
+		// Server error, gagal menyimpan user
+		return c.JSON(fiber.Map{
+			"status":  500,
+			"message": "Server error, gagal menyimpan user",
+		})
 	}
 
 	// also create cart
 	errCart := models.CreateCart(controller.Db, &cart, user.ID)
 	if errCart != nil {
-		return c.SendStatus(500) // Server error, gagal menyimpan user
+		// Server error, gagal menyimpan user
+		return c.JSON(fiber.Map{
+			"status":  500,
+			"message": "Server error, gagal menyimpan user",
+		})
 	}
 
 	// if succeed
-	return c.Redirect("/login")
+	return c.JSON(fiber.Map{
+		"message": "User telah berhasil dibuat",
+	})
+
 }
