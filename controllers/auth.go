@@ -5,6 +5,7 @@ import (
 	"rapid/rest-shoppingcart/models"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
@@ -16,10 +17,19 @@ type LoginForm struct {
 	Password string `form:"password" json:"password" validate:"required"`
 }
 
+type RegistrationForm struct {
+	Username string `form:"username" json:"username" validate:"required"`
+	Password string `form:"password" json:"password" validate:"required"`
+	Name     string `form:"name" json:"name" validate:"required"`
+	Email    string `form:"email" json:"email" validate:"required"`
+}
+
 type AuthController struct {
 	// Declare variables
 	Db *gorm.DB
 }
+
+var checker = validator.New()
 
 func InitAuthController() *AuthController {
 	db := database.InitDb()
@@ -29,13 +39,32 @@ func InitAuthController() *AuthController {
 	return &AuthController{Db: db}
 }
 
-// POST /login
+// @BasePath /
+
+// LoginPosted godoc
+// @Summary LoginPosted example
+// @Schemes
+// @Description LoginPosted
+// @Tags rest-shoppingcart
+// @Param user body models.User true "user"
+// @Accept json
+// @Produce json
+// @Success 200 {json} LoginPosted
+// @Router /login [post]
 func (controller *AuthController) LoginPosted(c *fiber.Ctx) error {
 	var user models.User
 	var myform LoginForm
 
 	if err := c.BodyParser(&myform); err != nil {
 		// Bad Request, LoginForm is not complete
+		return c.JSON(fiber.Map{
+			"status":  400,
+			"message": "Bad Request, Login Form is not complete",
+		})
+	}
+
+	err := checker.Struct(myform)
+	if err != nil {
 		return c.JSON(fiber.Map{
 			"status":  400,
 			"message": "Bad Request, Login Form is not complete",
@@ -83,12 +112,24 @@ func (controller *AuthController) LoginPosted(c *fiber.Ctx) error {
 	})
 }
 
-// POST /register
+// @BasePath /
+
+// AddRegisteredUser godoc
+// @Summary AddRegisteredUser example
+// @Schemes
+// @Description AddRegisteredUser
+// @Tags rest-shoppingcart
+// @Param user body models.User true "user"
+// @Accept json
+// @Produce json
+// @Success 200 {json} AddRegisteredUser
+// @Router /register [post]
 func (controller *AuthController) AddRegisteredUser(c *fiber.Ctx) error {
+	var myform RegistrationForm
 	var user models.User
 	var cart models.Cart
 
-	if err := c.BodyParser(&user); err != nil {
+	if err := c.BodyParser(&myform); err != nil {
 		// Bad Request, RegisterForm is not complete
 		return c.JSON(fiber.Map{
 			"status":  400,
@@ -96,21 +137,33 @@ func (controller *AuthController) AddRegisteredUser(c *fiber.Ctx) error {
 		})
 	}
 
+	errChecker := checker.Struct(myform)
+	if errChecker != nil {
+		return c.JSON(fiber.Map{
+			"status":  400,
+			"message": "Bad Request, Registration Form is not complete",
+		})
+	}
+
 	// Cek apakah username sudah digunakan
-	errUsername := models.FindUserByUsername(controller.Db, &user, user.Username)
+	errUsername := models.FindUserByUsername(controller.Db, &user, myform.Username)
 	if errUsername != gorm.ErrRecordNotFound {
 		return c.JSON(fiber.Map{
 			"message": "Username telah digunakan",
 		})
-
 	}
 
 	// Hash password
-	bytes, _ := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+	bytes, _ := bcrypt.GenerateFromPassword([]byte(myform.Password), 10)
 	sHash := string(bytes)
 
 	// Simpan hashing, bukan plain passwordnya
 	user.Password = sHash
+
+	// Simpan nama dan username dari form
+	user.Username = myform.Username
+	user.Name = myform.Name
+	user.Email = myform.Email
 
 	// save user
 	err := models.CreateUser(controller.Db, &user)

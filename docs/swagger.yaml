@@ -1,0 +1,328 @@
+definitions:
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  models.Cart:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      products:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      updatedAt:
+        type: string
+      userID:
+        type: integer
+    type: object
+  models.Product:
+    properties:
+      carts:
+        items:
+          $ref: '#/definitions/models.Cart'
+        type: array
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      image:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+      transaksis:
+        items:
+          $ref: '#/definitions/models.Transaksi'
+        type: array
+      updatedAt:
+        type: string
+    type: object
+  models.Transaksi:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      products:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      updatedAt:
+        type: string
+      userID:
+        type: integer
+    type: object
+  models.User:
+    properties:
+      cart:
+        $ref: '#/definitions/models.Cart'
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      password:
+        type: string
+      transaksis:
+        items:
+          $ref: '#/definitions/models.Transaksi'
+        type: array
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server celler server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: REST Shopping Cart
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: LoginPosted
+      parameters:
+      - description: user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      summary: LoginPosted example
+      tags:
+      - rest-shoppingcart
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: GetAllProduct
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      summary: GetAllProduct example
+      tags:
+      - rest-shoppingcart
+  /products/addtocart/{cartid}/product/{productid}:
+    get:
+      consumes:
+      - application/json
+      description: InsertToCart
+      parameters:
+      - description: Cart Id
+        in: path
+        minimum: 1
+        name: cartid
+        required: true
+        type: integer
+      - description: Product Id
+        in: path
+        minimum: 1
+        name: productid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: InsertToCart example
+      tags:
+      - rest-shoppingcart
+  /products/create:
+    post:
+      consumes:
+      - application/json
+      description: AddPostedProduct
+      parameters:
+      - description: product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: AddPostedProduct example
+      tags:
+      - rest-shoppingcart
+  /products/detail/{id}:
+    get:
+      consumes:
+      - application/json
+      description: DetailProduct
+      parameters:
+      - description: Product Id
+        in: path
+        minimum: 1
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      summary: DetailProduct example
+      tags:
+      - rest-shoppingcart
+  /products/hapus/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: DeleteProduct
+      parameters:
+      - description: Product Id
+        in: path
+        minimum: 1
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: DeleteProduct example
+      tags:
+      - rest-shoppingcart
+  /products/ubah/{id}:
+    put:
+      consumes:
+      - application/json
+      description: AddPostedProduct
+      parameters:
+      - description: Product Id
+        in: path
+        minimum: 1
+        name: id
+        required: true
+        type: integer
+      - description: product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: AddPostedProduct example
+      tags:
+      - rest-shoppingcart
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: AddRegisteredUser
+      parameters:
+      - description: user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      summary: AddRegisteredUser example
+      tags:
+      - rest-shoppingcart
+  /shoppingcart/{cartid}:
+    get:
+      consumes:
+      - application/json
+      description: GetShoppingCart
+      parameters:
+      - description: Cart Id
+        in: path
+        minimum: 1
+        name: cartid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: GetShoppingCart example
+      tags:
+      - rest-shoppingcart
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

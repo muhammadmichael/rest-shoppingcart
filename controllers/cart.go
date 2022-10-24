@@ -22,7 +22,20 @@ func InitCartController() *CartController {
 	return &CartController{Db: db}
 }
 
-// GET /addtocart/:cartid/products/:productid
+// @BasePath /
+
+// InsertToCart godoc
+// @Summary InsertToCart example
+// @Schemes
+// @Description InsertToCart
+// @Tags rest-shoppingcart
+// @Param        cartid         path      int     true  "Cart Id"       minimum(1)
+// @Param        productid         path      int     true  "Product Id"       minimum(1)
+// @Accept json
+// @Produce json
+// @Success 200 {json} InsertToCart
+// @Security ApiKeyAuth
+// @Router /products/addtocart/{cartid}/product/{productid} [get]
 func (controller *CartController) InsertToCart(c *fiber.Ctx) error {
 	params := c.AllParams() // "{"id": "1"}"
 
@@ -66,7 +79,19 @@ func (controller *CartController) InsertToCart(c *fiber.Ctx) error {
 	})
 }
 
-// GET /shoppingcart/:cartid
+// @BasePath /
+
+// GetShoppingCart godoc
+// @Summary GetShoppingCart example
+// @Schemes
+// @Description GetShoppingCart
+// @Tags rest-shoppingcart
+// @Param        cartid         path      int     true  "Cart Id"       minimum(1)
+// @Accept json
+// @Produce json
+// @Success 200 {json} GetShoppingCart
+// @Security ApiKeyAuth
+// @Router /shoppingcart/{cartid} [get]
 func (controller *CartController) GetShoppingCart(c *fiber.Ctx) error {
 	params := c.AllParams() // "{"id": "1"}"
 
