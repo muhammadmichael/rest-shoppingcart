@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"rapid/rest-shoppingcart/database"
 	"rapid/rest-shoppingcart/models"
 	"strconv"
@@ -31,6 +32,15 @@ func (controller *TransaksiController) InsertToTransaksi(c *fiber.Ctx) error {
 	var transaksi models.Transaksi
 	var cart models.Cart
 
+	// Find the cart
+	errNoCart := models.ReadCartById(controller.Db, &cart, intUserId)
+	if errNoCart != nil {
+		return c.JSON(fiber.Map{
+			"status":  500,
+			"message": "Tidak dapat menemukan Cart dengan Id " + params["userid"] + ", Gagal Melakukan Checkout",
+		})
+	}
+
 	// Find the product first,
 	err := models.ReadAllProductsInCart(controller.Db, &cart, intUserId)
 	if err != nil {
@@ -48,10 +58,14 @@ func (controller *TransaksiController) InsertToTransaksi(c *fiber.Ctx) error {
 		return c.SendStatus(500) // http 500 internal server error
 	}
 
-	return c.Redirect("/products")
+	// if succeed
+	return c.JSON(fiber.Map{
+		"status":  200,
+		"message": "Berhasil Melakukan Checkout",
+	})
 }
 
-// GET /historytransaksi/:userid
+// GET /history/:userid
 func (controller *TransaksiController) GetTransaksi(c *fiber.Ctx) error {
 	params := c.AllParams() // "{"id": "1"}"
 
@@ -60,10 +74,11 @@ func (controller *TransaksiController) GetTransaksi(c *fiber.Ctx) error {
 	var transaksis []models.Transaksi
 	err := models.ReadTransaksiById(controller.Db, &transaksis, intUserId)
 	if err != nil {
+		fmt.Println("masuk")
 		return c.SendStatus(500) // http 500 internal server error
 	}
-	return c.Render("transaksi", fiber.Map{
-		"Title":      "History Transaksi",
+	return c.JSON(fiber.Map{
+		"Message":    "History Transaksi",
 		"Transaksis": transaksis,
 	})
 
@@ -80,8 +95,8 @@ func (controller *TransaksiController) DetailTransaksi(c *fiber.Ctx) error {
 	if err != nil {
 		return c.SendStatus(500) // http 500 internal server error
 	}
-	return c.Render("detailtransaksi", fiber.Map{
-		"Title":    "History Transaksi",
+	return c.JSON(fiber.Map{
+		"Message":  "Detail Product pada Transaksi",
 		"Products": transaksi.Products,
 	})
 }
