@@ -38,7 +38,7 @@ func main() {
 	// All the routes below need authentication
 	// Product Routes (CRUD Products, Add Product to Shopping Cart)
 	prod.Post("/create", prodController.AddPostedProduct)
-	prod.Post("/ubah/:id", prodController.AddUpdatedProduct)
+	prod.Put("/ubah/:id", prodController.AddUpdatedProduct)
 	prod.Delete("/hapus/:id", prodController.DeleteProduct)
 	prod.Get("/addtocart/:cartid/product/:productid", cartController.InsertToCart)
 
