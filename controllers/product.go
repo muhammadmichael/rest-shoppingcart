@@ -45,7 +45,10 @@ func (controller *ProductController) AddPostedProduct(c *fiber.Ctx) error {
 	var product models.Product
 
 	if err := c.BodyParser(&product); err != nil {
-		return c.Redirect("/products")
+		return c.JSON(fiber.Map{
+			"status":  400,
+			"message": "Bad Request, Product Form is not complete",
+		})
 	}
 
 	// Parse the multipart form:
@@ -72,10 +75,13 @@ func (controller *ProductController) AddPostedProduct(c *fiber.Ctx) error {
 	// save product
 	err := models.CreateProduct(controller.Db, &product)
 	if err != nil {
-		return c.Redirect("/products")
+		return c.SendStatus(500)
 	}
 	// if succeed
-	return c.Redirect("/products")
+	return c.JSON(fiber.Map{
+		"status":  200,
+		"message": "Berhasil Menambahkan Product",
+	})
 }
 
 // GET /products/detail:id
@@ -103,25 +109,7 @@ func (controller *ProductController) DetailProduct(c *fiber.Ctx) error {
 	})
 }
 
-// GET /products/ubah/:id
-func (controller *ProductController) UpdateProduct(c *fiber.Ctx) error {
-	params := c.AllParams() // "{"id": "1"}"
-
-	intId, _ := strconv.Atoi(params["id"])
-
-	var product models.Product
-	err := models.ReadProductById(controller.Db, &product, intId)
-	if err != nil {
-		return c.SendStatus(500) // http 500 internal server error
-	}
-
-	return c.Render("productubah", fiber.Map{
-		"Title":   "Ubah Produk",
-		"Product": product,
-	})
-}
-
-// POST /products/ubah/:id
+// PUT /products/ubah/:id
 func (controller *ProductController) AddUpdatedProduct(c *fiber.Ctx) error {
 	var product models.Product
 
@@ -157,10 +145,13 @@ func (controller *ProductController) AddUpdatedProduct(c *fiber.Ctx) error {
 	// save product
 	err := models.UpdateProduct(controller.Db, &product)
 	if err != nil {
-		return c.Redirect("/products")
+		return c.SendStatus(500)
 	}
 	// if succeed
-	return c.Redirect("/products")
+	return c.JSON(fiber.Map{
+		"status":  200,
+		"message": "Berhasil Mengubah Product dengan Id " + params["id"],
+	})
 }
 
 // GET /products/hapus/:id
