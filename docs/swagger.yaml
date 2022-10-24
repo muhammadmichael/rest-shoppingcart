@@ -144,6 +144,36 @@ paths:
       summary: GetAllProduct example
       tags:
       - rest-shoppingcart
+  /products/addtocart/{cartid}/product/{productid}:
+    get:
+      consumes:
+      - application/json
+      description: InsertToCart
+      parameters:
+      - description: Cart Id
+        in: path
+        minimum: 1
+        name: cartid
+        required: true
+        type: integer
+      - description: Product Id
+        in: path
+        minimum: 1
+        name: productid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: InsertToCart example
+      tags:
+      - rest-shoppingcart
   /products/create:
     post:
       consumes:
@@ -190,6 +220,60 @@ paths:
       summary: DetailProduct example
       tags:
       - rest-shoppingcart
+  /products/hapus/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: DeleteProduct
+      parameters:
+      - description: Product Id
+        in: path
+        minimum: 1
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: DeleteProduct example
+      tags:
+      - rest-shoppingcart
+  /products/ubah/{id}:
+    put:
+      consumes:
+      - application/json
+      description: AddPostedProduct
+      parameters:
+      - description: Product Id
+        in: path
+        minimum: 1
+        name: id
+        required: true
+        type: integer
+      - description: product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: AddPostedProduct example
+      tags:
+      - rest-shoppingcart
   /register:
     post:
       consumes:
@@ -210,6 +294,30 @@ paths:
           schema:
             type: json
       summary: AddRegisteredUser example
+      tags:
+      - rest-shoppingcart
+  /shoppingcart/{cartid}:
+    get:
+      consumes:
+      - application/json
+      description: GetShoppingCart
+      parameters:
+      - description: Cart Id
+        in: path
+        minimum: 1
+        name: cartid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: GetShoppingCart example
       tags:
       - rest-shoppingcart
 securityDefinitions:

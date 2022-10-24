@@ -141,7 +141,20 @@ func (controller *ProductController) DetailProduct(c *fiber.Ctx) error {
 	})
 }
 
-// PUT /products/ubah/:id
+// @BasePath /
+
+// AddPostedProduct godoc
+// @Summary AddPostedProduct example
+// @Schemes
+// @Description AddPostedProduct
+// @Tags rest-shoppingcart
+// @Param        id         path      int     true  "Product Id"       minimum(1)
+// @Param product body models.Product true "product"
+// @Accept json
+// @Produce json
+// @Success 200 {json} AddPostedProduct
+// @Security ApiKeyAuth
+// @Router /products/ubah/{id} [put]
 func (controller *ProductController) AddUpdatedProduct(c *fiber.Ctx) error {
 	var product models.Product
 
@@ -186,7 +199,19 @@ func (controller *ProductController) AddUpdatedProduct(c *fiber.Ctx) error {
 	})
 }
 
-// DELETE /products/hapus/:id
+// @BasePath /api
+
+// DeleteProduct godoc
+// @Summary DeleteProduct example
+// @Schemes
+// @Description DeleteProduct
+// @Param        id         path      int     true  "Product Id"       minimum(1)
+// @Tags rest-shoppingcart
+// @Accept json
+// @Produce json
+// @Success 200 {json} DeleteProduct
+// @Security ApiKeyAuth
+// @Router /products/hapus/{id} [delete]
 func (controller *ProductController) DeleteProduct(c *fiber.Ctx) error {
 	params := c.AllParams() // "{"id": "1"}"
 
