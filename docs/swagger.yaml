@@ -107,6 +107,78 @@ info:
   title: REST Shopping Cart
   version: "1.0"
 paths:
+  /checkout/{userid}:
+    get:
+      consumes:
+      - application/json
+      description: InsertToTransaksi
+      parameters:
+      - description: User Id
+        in: path
+        minimum: 1
+        name: userid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: InsertToTransaksi example
+      tags:
+      - rest-shoppingcart
+  /history/{userid}:
+    get:
+      consumes:
+      - application/json
+      description: GetTransaksi
+      parameters:
+      - description: User Id
+        in: path
+        minimum: 1
+        name: userid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: GetTransaksi example
+      tags:
+      - rest-shoppingcart
+  /history/detail/{transaksiid}:
+    get:
+      consumes:
+      - application/json
+      description: DetailTransaksi
+      parameters:
+      - description: Transaksi Id
+        in: path
+        minimum: 1
+        name: transaksiid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      security:
+      - ApiKeyAuth: []
+      summary: DetailTransaksi example
+      tags:
+      - rest-shoppingcart
   /login:
     post:
       consumes:

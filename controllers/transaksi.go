@@ -22,7 +22,19 @@ func InitTransaksiController() *TransaksiController {
 	return &TransaksiController{Db: db}
 }
 
-// GET /checkout/:userid
+// @BasePath /
+
+// InsertToTransaksi godoc
+// @Summary InsertToTransaksi example
+// @Schemes
+// @Description InsertToTransaksi
+// @Tags rest-shoppingcart
+// @Param        userid        path      int     true  "User Id"       minimum(1)
+// @Accept json
+// @Produce json
+// @Success 200 {json} InsertToTransaksi
+// @Security ApiKeyAuth
+// @Router /checkout/{userid} [get]
 func (controller *TransaksiController) InsertToTransaksi(c *fiber.Ctx) error {
 	params := c.AllParams() // "{"id": "1"}"
 
@@ -72,7 +84,19 @@ func (controller *TransaksiController) InsertToTransaksi(c *fiber.Ctx) error {
 	})
 }
 
-// GET /history/:userid
+// @BasePath /
+
+// GetTransaksi godoc
+// @Summary GetTransaksi example
+// @Schemes
+// @Description GetTransaksi
+// @Tags rest-shoppingcart
+// @Param        userid        path      int     true  "User Id"       minimum(1)
+// @Accept json
+// @Produce json
+// @Success 200 {json} GetTransaksi
+// @Security ApiKeyAuth
+// @Router /history/{userid} [get]
 func (controller *TransaksiController) GetTransaksi(c *fiber.Ctx) error {
 	params := c.AllParams() // "{"id": "1"}"
 
@@ -90,7 +114,19 @@ func (controller *TransaksiController) GetTransaksi(c *fiber.Ctx) error {
 
 }
 
-// GET /history/detail/:transaksiid
+// @BasePath /
+
+// DetailTransaksi godoc
+// @Summary DetailTransaksi example
+// @Schemes
+// @Description DetailTransaksi
+// @Tags rest-shoppingcart
+// @Param        transaksiid        path      int     true  "Transaksi Id"       minimum(1)
+// @Accept json
+// @Produce json
+// @Success 200 {json} DetailTransaksi
+// @Security ApiKeyAuth
+// @Router /history/detail/{transaksiid} [get]
 func (controller *TransaksiController) DetailTransaksi(c *fiber.Ctx) error {
 	params := c.AllParams() // "{"id": "1"}"
 
