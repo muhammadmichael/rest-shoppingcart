@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"rapid/rest-shoppingcart/database"
 	"rapid/rest-shoppingcart/models"
 	"strconv"
@@ -47,6 +46,14 @@ func (controller *TransaksiController) InsertToTransaksi(c *fiber.Ctx) error {
 		return c.SendStatus(500) // http 500 internal server error
 	}
 
+	// Jika Cart kosong
+	if len(cart.Products) == 0 {
+		return c.JSON(fiber.Map{
+			"status":  400,
+			"message": "Cart kosong, silahkan isi Product ke Cart terlebih dahulu",
+		})
+	}
+
 	errs := models.CreateTransaksi(controller.Db, &transaksi, uint(intUserId), cart.Products)
 	if errs != nil {
 		return c.SendStatus(500) // http 500 internal server error
@@ -74,7 +81,6 @@ func (controller *TransaksiController) GetTransaksi(c *fiber.Ctx) error {
 	var transaksis []models.Transaksi
 	err := models.ReadTransaksiById(controller.Db, &transaksis, intUserId)
 	if err != nil {
-		fmt.Println("masuk")
 		return c.SendStatus(500) // http 500 internal server error
 	}
 	return c.JSON(fiber.Map{
