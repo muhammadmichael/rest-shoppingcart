@@ -163,13 +163,25 @@ func (controller *ProductController) DetailProduct(c *fiber.Ctx) error {
 // @Router /products/ubah/{id} [put]
 func (controller *ProductController) AddUpdatedProduct(c *fiber.Ctx) error {
 	var product models.Product
+	var checkProduct models.Product
 
 	params := c.AllParams() // "{"id": "1"}"
 	intId, _ := strconv.Atoi(params["id"])
 	product.Id = intId
 
 	if err := c.BodyParser(&product); err != nil {
-		return c.Redirect("/products")
+		return c.JSON(fiber.Map{
+			"status":  400,
+			"message": "Bad Request, Product Form is not complete",
+		})
+	}
+
+	errFind := models.ReadProductById(controller.Db, &checkProduct, intId)
+	if errFind != nil {
+		return c.JSON(fiber.Map{
+			"Status":  500,
+			"message": "Tidak dapat mencari product dengan Id " + params["id"] + ", Gagal Mengupdate Product",
+		})
 	}
 
 	// Parse the multipart form:
